@@ -45,6 +45,14 @@ inputs:
     description: 'Amount of time in milliseconds to wait for the datasource to fetch data in a single run'
     required: false
     default: '3600000'
+  zoom_level:
+    description: 'The zoom level to be used in the geospatial bucketizer'
+    required: false
+    default: 0
+  dereference_members:
+    description: 'Whether or not the LDES client should dereference members'
+    required: false
+    default: 'false'
 outputs:
   delta_bytes: # size of changed data
     description: 'The overall number of bytes changed in the output data this run (current size - previous size)'
@@ -70,6 +78,8 @@ runs:
         INPUT_PROPERTY_PATH: ${{ inputs.property_path }}
         INPUT_STREAM_DATA: ${{ inputs.stream_data }}
         INPUT_TIMEOUT: ${{ inputs.timeout }}
+        INPUT_ZOOM_LEVEL: ${{ inputs.zoom_level }}
+        INPUT_DEREFERENCE_MEMBERS: ${{ inputs.dereference_members }}
     - name: Run post script
       run: node ${{ github.action_path }}/dist/post/index.js
       shell: bash

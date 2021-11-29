@@ -4,7 +4,7 @@ import type { Config } from '../Config';
 
 interface Datasource {
   getData: (config: Config, bucketizer: Bucketizer) => Promise<Member[]>;
-  getLinkedDataEventStream: (url: string, storage: string) => EventStream;
+  getLinkedDataEventStream: (url: string, storage: string, dereferenceMembers: boolean) => EventStream;
 }
 
 export default Datasource;

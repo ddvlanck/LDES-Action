@@ -55,6 +55,7 @@ export class Data {
     const ldes = this.datasourceContext.getLinkedDataEventStream(
       this.config.url,
       this.config.storage,
+      this.config.dereference_members,
     );
     const bucketizer = await this.fragmentContext.getStrategy().initBucketizer(this.config);
 
@@ -156,7 +157,12 @@ export class Data {
   }
 
   private getOutputExtension(quads: RDF.Quad[]): FileExtension {
-    const graphlessQuads = quads.filter(quad => quad.graph.termType === 'DefaultGraph');
-    return graphlessQuads.length > 0 ? FileExtension.Turtle : FileExtension.TriG;
+    // If no quads, continue with .ttl format
+    if (quads.length === 0) {
+      return FileExtension.Turtle;
+    }
+
+    const graphlessQuads = quads.some(quad => quad.graph.termType === 'DefaultGraph');
+    return graphlessQuads ? FileExtension.Turtle : FileExtension.TriG;
   }
 }

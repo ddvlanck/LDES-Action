@@ -13,7 +13,7 @@ class LDESClientDatasource implements Datasource {
   ): Promise<Member[]> {
     return new Promise<Member[]>((resolve, reject) => {
       try {
-        const ldes = this.getLinkedDataEventStream(config.url, config.storage);
+        const ldes = this.getLinkedDataEventStream(config.url, config.storage, config.dereference_members);
 
         const data: Member[] = [];
 
@@ -44,12 +44,13 @@ class LDESClientDatasource implements Datasource {
     });
   }
 
-  public getLinkedDataEventStream(url: string, storage: string): EventStream {
+  public getLinkedDataEventStream(url: string, storage: string, dereferenceMembers: boolean): EventStream {
     const options = {
       emitMemberOnce: true,
       disableSynchronization: false,
       mimeType: 'text/turtle',
       representation: 'Quads',
+      dereferenceMembers,
     };
 
     const LDESClient = newEngine();

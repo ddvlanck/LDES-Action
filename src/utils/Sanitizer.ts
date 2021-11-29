@@ -3,7 +3,7 @@
  */
 const truncate = require('truncate-utf8-bytes');
 
-const illegalRe = /[/?<>\\:*|"]/gu;
+const illegalRe = /[?<>\\:*|"]/gu;
 const controlRe = /[\x00-\x1F\x80-\x9F]/gu;
 const reservedRe = /^\.+$/u;
 const windowsTrailingRe = /[. ]+$/u;

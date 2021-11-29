@@ -36,6 +36,12 @@ export interface Config {
 
   // Amount of time to wait for the datasource to fetch data in a single run
   timeout: number;
+
+  // The zoom level to be used in the geospatial bucketizer
+  zoom_level: number;
+
+  // Whether or not the LDES client should dereference members
+  dereference_members: boolean;
 }
 
 export function getConfig(): Config {
@@ -55,5 +61,7 @@ export function getConfig(): Config {
     property_path: core.getInput('property_path'),
     stream_data: core.getBooleanInput('stream_data') || false,
     timeout: Number.parseInt(core.getInput('timeout'), 10) || 1_000 * 60 * 60 * 1,
+    zoom_level: Number.parseInt(core.getInput('zoom_level'), 10),
+    dereference_members: core.getBooleanInput('stream_data') || false,
   };
 }

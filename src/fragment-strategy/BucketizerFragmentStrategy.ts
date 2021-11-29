@@ -1,6 +1,7 @@
-import { appendFileSync } from 'fs';
+import { appendFileSync, existsSync, mkdirSync } from 'fs';
+import { dirname } from 'path';
 import type * as RDF from '@rdfjs/types';
-import { SubstringBucketizer, SubjectPageBucketizer, BasicBucketizer } from '@treecg/bucketizers';
+import { SubstringBucketizer, SubjectPageBucketizer, BasicBucketizer, GeospatialBucketizer } from '@treecg/bucketizers';
 import type { Bucketizer, BucketizerOptions, Member, RelationParameters } from '@treecg/types';
 import * as N3 from 'n3';
 import { DataFactory } from 'rdf-data-factory';
@@ -35,6 +36,10 @@ class BucketizerFragmentStrategy implements FragmentStrategy {
       case 'subject-page':
         console.log(`[BucketizerFragmentStrategy]: setting strategy to subject pages.`);
         return SubjectPageBucketizer.build(bucketizerOptions, state === null ? null : state.BucketizerState);
+
+      case 'geospatial':
+        console.log(`[BucketizerFragmentStrategy]: setting strategy to geospatial.`);
+        return GeospatialBucketizer.build(bucketizerOptions, config.zoom_level);
 
       case 'basic':
       default:
@@ -123,6 +128,12 @@ class BucketizerFragmentStrategy implements FragmentStrategy {
       writer.end((error, result) => {
         if (error) {
           reject(new Error(error.stack));
+        }
+
+        const path = dirname(bucketPath);
+
+        if (!existsSync(path)) {
+          mkdirSync(path, { recursive: true });
         }
 
         appendFileSync(bucketPath, result);
